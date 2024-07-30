@@ -65,38 +65,6 @@ if ((isset($_GET['act'])) && ($_GET['act'] != '')) {
             }
             break;
 
-        case 'update_account':
-            if (empty($_SESSION['user_name_login'])) {
-                echo "<script>window.location.href='index.php';</script>";
-            } else {
-                extract($_SESSION['user_name_login']);
-                include "./Duan/View/HTML_PHP/Account/update_account.php";
-            }
-            break;
-        case 'updated_account':
-            if (isset($_POST['update']) && ($_POST['update'])) {
-                $id_user = $_POST['id_user'];
-                $user_name = $_POST['user_name'];
-                $email = $_POST['email'];
-                $address = $_POST['address'];
-                $pass = $_POST['pass'];
-                $tel = $_POST['tel'];
-                $avatar = $_FILES['avatar']['name'];
-                if ($avatar) {
-                    $tmp_name = $_FILES['avatar']['tmp_name'];
-                    move_uploaded_file($tmp_name, 'Duan/image_user/' . $avatar);
-                    update_account($id_user, $user_name, $pass, $email, $address, $tel, $avatar);
-                } else {
-                    update_account($id_user, $user_name, $pass, $email, $address, $tel, "");
-                }
-                // $_SESSION['user_name_login'] = check_user($user_name, $pass);
-                echo '<script>alert("Cập Nhật Thành Công!");</script>';
-                extract($_SESSION['user_name_login']);
-                include "./Duan/View/HTML_PHP/Account/update_account.php";
-            } else {
-                // echo '<script>alert("Lỗi!");</script>';
-            }
-            break;
         case 'change_password':
             if (empty($_SESSION['user_name_login'])) {
                 echo "<script>window.location.href='index.php';</script>";

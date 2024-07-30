@@ -186,7 +186,26 @@ function change_view ($id_pro){
 ?>
 
 <!-- color_pro -->
-  /////////////////////////////
-
- ///////////////////////////
+ <?php
+function add_more_color($id_pro, $id_color, $img, $quantity)
+{
+    $sql = "INSERT INTO COLOR_PRO (ID_PRO,ID_COLOR,IMAGE,QUANTITY) VALUES ('$id_pro','$id_color','$img','$quantity')";
+    pdo_execute($sql);
+}
+function load_one_color_pro($id_clp)
+{
+    $sql = "SELECT * FROM COLOR_PRO WHERE ID_CLP = '$id_clp'";
+    $color_pro = pdo_query_one($sql);
+    return $color_pro;
+}
+function update_color_pro($id_clp, $id_color, $img, $quantity)
+{
+    if ($img != '') {
+        $sql = "UPDATE COLOR_PRO SET 
+        ID_COLOR='$id_color',IMAGE='$img',QUANTITY='$quantity' WHERE ID_CLP = '$id_clp'";
+    } else {
+        $sql = "UPDATE COLOR_PRO SET ID_COLOR='$id_color',QUANTITY='$quantity' WHERE ID_CLP = $id_clp";
+    }
+    pdo_execute($sql);
+}
 ?>
