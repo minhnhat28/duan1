@@ -371,7 +371,7 @@ if (empty($_SESSION['user_name_login'])) {
                         $img = $_FILES['img']['name'];
                         $tmp_name = $_FILES['img']['tmp_name'];
                         move_uploaded_file($tmp_name, '../image_product/' . $img);
-                        add_more_color($id_pro, $id_color, $img, $quantity);
+                        add_more_color($id_pro, $id_color, $img, $quantity);    
                     }
                 }
                 $listcolor = load_all_color();
@@ -396,16 +396,6 @@ if (empty($_SESSION['user_name_login'])) {
                 //////////////////////////
 
 
-
-            
-
-            case 'order_lists_admin':
-                include "view/Order/order_lists.php";
-                break;
-
-            case 'order_ongoing_admin':
-                include "view/Order/order_ongoing.php";
-                break;
 
 
             default:

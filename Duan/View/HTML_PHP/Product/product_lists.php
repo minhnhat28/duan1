@@ -121,8 +121,6 @@
         <?php
         foreach ($product as $key => $value) {
             $price_format = number_format($value['price'], 0, ".", ".");
-            $discount_format = number_format($value['discount'], 0, ".", ".");
-            $sale = 100 - ($value['discount'] / ($value['price'] / 100));
             ?>
             <div class="col-6 col-md-4 col-lg-3 col-xl-2 mt-4">
 
@@ -131,14 +129,7 @@
                         <a href="index.php?act=product_details&id=<?= $value['id_pro'] ?>"><img
                                 src="./Duan/image_product/<?= $value['img'] ?>" class="card-img-top" alt="..."></a>
                         <?php
-                        if ($value['discount'] > 0) {
-                            ?>
-                            <span
-                                class="position-absolute bg-primary text-white d-flex align-items-center justify-content-center">-
-                                <?= ceil($sale) ?>%
-                            </span>
-                            <?php
-                        }
+                        
                         ?>
                     </div>
                     <div class="card-body">
@@ -148,24 +139,14 @@
                             </a>
                         </div>
                         <div>
-                            <?php
-                            if ($value['discount'] != 0) {
-                                ?>
-                                <del class="old-price">
-                                    <?= $price_format ?>đ
-                                </del>
-                                <span class="new-price">
-                                    <?= $discount_format ?>đ
-                                </span>
-                                <?php
-                            } else {
-                                ?>
+                            
+    
                                 <del class="old-price"></del>
                                 <span class="new-price">
                                     <?= $price_format ?>đ
                                 </span>
                                 <?php
-                            }
+                            
                             ?>
                         </div>
                         <div>

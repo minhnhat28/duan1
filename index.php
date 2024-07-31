@@ -72,7 +72,6 @@ if ((isset($_GET['act'])) && ($_GET['act'] != '')) {
                 extract($_SESSION['user_name_login']);
                 include "./Duan/View/HTML_PHP/Account/change_password.php";
             }
-
             break;
 
         case 'log_out':
@@ -151,6 +150,22 @@ if ((isset($_GET['act'])) && ($_GET['act'] != '')) {
             $brand = load_all_brand();
             include "./Duan/View/HTML_PHP/Product/product_lists.php";
             break;
+        case 'product_details':
+                if (isset($_GET['id'])) {
+                    $id_pro = $_GET['id'];
+                    $other_pro = other_pro($id_pro);
+                    $brand_name = get_name_brand($id_pro);
+                    $cate_name = get_name_cate($id_pro);
+                    $product = load_one_pro($id_pro);
+                    $list_color = load_color_for_pro($id_pro);
+                    if (isset($_GET['color'])) {
+                        $color = $_GET['color'];
+                        $color_pro = load_pro_for_color($id_pro, $color);
+                    }
+                    change_view($id_pro);
+                }
+                include "./Duan/View/HTML_PHP/Product/product_details.php";
+                break;
 
         ///////////////////////////////////////
 

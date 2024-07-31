@@ -41,6 +41,7 @@ function load_all_pro()
     $pro = pdo_query($sql);
     return $pro;
 }
+
 function count_pro($pro_per_page, $kyw, $id_cate)
 {
     $sql = "SELECT * FROM PRODUCT WHERE ID_PRO != 1";
@@ -71,9 +72,6 @@ function load_limit_pro($start, $limit, $kyw, $id_cate)
     if ($id_cate > 0) {
         $sql .= " AND ID_CATE = $id_cate";
     }
-    // if($cate_name != ""){
-    //     $sql .=" AND CATE_NAME LIKE '%$cate_name%' ";
-    // }
     $sql .= " AND PRODUCT.ID_PRO != 1 ORDER BY PRODUCT.ID_PRO DESC LIMIT $start,$limit ";
     $pro = pdo_query($sql);
     return $pro;
@@ -208,4 +206,34 @@ function update_color_pro($id_clp, $id_color, $img, $quantity)
     }
     pdo_execute($sql);
 }
+function load_limit_10_color_pro($start, $limit, $id_pro)
+{
+    $sql = "SELECT * FROM COLOR_PRO 
+    JOIN COLOR ON COLOR_PRO.ID_COLOR = COLOR.ID_COLOR
+    WHERE ID_PRO = $id_pro ORDER BY ID_PRO 
+    DESC LIMIT $start,$limit ";
+    $pro = pdo_query($sql);
+    return $pro;
+}
+function load_color_for_pro($id_pro)
+{
+    $sql = "SELECT * FROM COLOR_PRO 
+    JOIN COLOR ON COLOR_PRO.ID_COLOR = COLOR.ID_COLOR
+    WHERE ID_PRO = $id_pro";
+    $list_color = pdo_query($sql);
+    return $list_color;
+}
+function load_pro_for_color($id_pro, $color)
+{
+    $sql = "SELECT * FROM COLOR_PRO 
+    JOIN COLOR ON COLOR_PRO.ID_COLOR = COLOR.ID_COLOR
+    WHERE COLOR_PRO.ID_COLOR = $color AND ID_PRO = $id_pro";
+    $color_pro = pdo_query_one($sql);
+    return $color_pro;
+}
+function change_quantity_pro($id_clp,$quantity){
+    $change = "UPDATE COLOR_PRO SET QUANTITY = QUANTITY - $quantity WHERE ID_CLP = $id_clp";
+    pdo_execute($change); 
+}
+
 ?>

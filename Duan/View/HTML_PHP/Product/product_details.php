@@ -73,16 +73,11 @@ if (isset($color_pro)) {
                 <div class="product-title-details">
                     <?= $pro_name ?>
                 </div>
-                <div class="all-price-details d-flex flex-wrap">
-                    <?php                 
-                        ?>
+                <div class="all-price-details d-flex flex-wrap">                                  
                         <span class="new-price-details">
                             <?= $price_format ?>đ
-                        </span>
-                        <?php
-                    ?>
+                        </span> 
                 </div>
-
                 <div class="all-product-details">
                     <span><strong>Hãng Sản Xuất: </strong>
                         <?= $brand_name ?>
@@ -224,13 +219,11 @@ if (isset($color_pro)) {
                                     </a>
                                 </div>
                                 <div>
-                                    <?php                                  
-                                        ?>
+                            
                                         <span class="new-price">
                                             <?= $price_other_format ?>đ
                                         </span>
-                                        <?php
-                                    ?>
+                                        
                                 </div>
                                 <div>
                                     <span class="rate">5.0 </span><i class="star-rate fa-solid fa-star"></i>
@@ -413,14 +406,6 @@ if (isset($color_pro)) {
     }
 </style>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"
-    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-    crossorigin="anonymous"></script>
-
-
-</script>
 
 
