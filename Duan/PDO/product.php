@@ -1,5 +1,5 @@
 <?php
-function add_product($pro_name, $price, $img, $detail, $color, $brand, $cate, $add_at, $quantity)
+function add_product($pro_name, $price, $img, $detail, $color, $brand, $cate, $add_at, $quantity) // Thêm sản phẩm
 {
     $sql = "INSERT INTO PRODUCT (pro_name,price,img,detail,id_brand,id_cate,add_at) 
     VALUES('$pro_name','$price','$img','$detail','$brand','$cate','$add_at')";
@@ -10,7 +10,7 @@ function add_product($pro_name, $price, $img, $detail, $color, $brand, $cate, $a
     $other_sql = "INSERT INTO COLOR_PRO(ID_COLOR,ID_PRO,IMAGE,QUANTITY) VALUES ('$color','$id_pro','$img','$quantity')";
     pdo_execute($other_sql);
 }
-function update_pro($id, $name, $price, $img, $detail, $cate, $brand)
+function update_pro($id, $name, $price, $img, $detail, $cate, $brand) // Cập nhập sản phẩm
 {
     if ($img != '') {
         $sql = "UPDATE PRODUCT SET PRO_NAME ='$name',PRICE='$price',IMG='$img',DETAIL='$detail',ID_CATE='$cate',ID_BRAND='$brand' 
@@ -22,7 +22,7 @@ function update_pro($id, $name, $price, $img, $detail, $cate, $brand)
         pdo_execute($sql);
     }
 }
-function delete_pro($id_pro){
+function delete_pro($id_pro){    //Xóa sản phẩm
         $update_color_pro = "UPDATE color_pro SET id_pro = 1 WHERE id_pro = '$id_pro'";
         pdo_execute($update_color_pro);
         $delet_comment = "DELETE FROM COMMENT WHERE ID_PRO = $id_pro";
@@ -30,7 +30,7 @@ function delete_pro($id_pro){
         $delete_pro = "DELETE FROM PRODUCT WHERE ID_PRO= $id_pro";
         pdo_execute($delete_pro);
 }
-function load_all_pro()
+function load_all_pro() // Tải all sản phẩm
 {
     $sql = "SELECT * FROM PRODUCT 
     JOIN CATEGORY ON PRODUCT.ID_CATE = CATEGORY.ID_CATE 
@@ -42,7 +42,7 @@ function load_all_pro()
     return $pro;
 }
 
-function count_pro($pro_per_page, $kyw, $id_cate)
+function count_pro($pro_per_page, $kyw, $id_cate)   // Đếm số lượng trang sản phẩm
 {
     $sql = "SELECT * FROM PRODUCT WHERE ID_PRO != 1";
     if ($kyw != "") {
@@ -59,7 +59,7 @@ function count_pro($pro_per_page, $kyw, $id_cate)
     $number = ceil($i / $pro_per_page);
     return $number;
 }
-function load_limit_pro($start, $limit, $kyw, $id_cate)
+function load_limit_pro($start, $limit, $kyw, $id_cate)  // Tải sản phẩm với giới hạn số lượng trong trang
 {
     $sql = "SELECT * FROM PRODUCT 
     JOIN CATEGORY ON PRODUCT.ID_CATE = CATEGORY.ID_CATE 
@@ -77,16 +77,16 @@ function load_limit_pro($start, $limit, $kyw, $id_cate)
     return $pro;
 }
 
-function load_top_5_pro()
-{
-    $sql = "SELECT * FROM PRODUCT 
-    JOIN CATEGORY ON PRODUCT.ID_CATE = CATEGORY.ID_CATE
-    WHERE PRODUCT.ID_PRO != 1
-    ORDER BY VIEW DESC LIMIT 0,5";
-    $pro = pdo_query($sql);
-    return $pro;
-}
-function load_one_pro_buy($id)
+// function load_top_5_pro()
+// {
+//     $sql = "SELECT * FROM PRODUCT 
+//     JOIN CATEGORY ON PRODUCT.ID_CATE = CATEGORY.ID_CATE
+//     WHERE PRODUCT.ID_PRO != 1
+//     ORDER BY VIEW DESC LIMIT 0,5";
+//     $pro = pdo_query($sql);
+//     return $pro;
+// }
+function load_one_pro_buy($id) // thông tin sản phẩm để mua
 {
     $sql = " SELECT * FROM color_pro 
     JOIN product ON PRODUCT.ID_PRO = COLOR_PRO.ID_PRO
@@ -97,7 +97,7 @@ function load_one_pro_buy($id)
     $pro = pdo_query_one($sql);
     return $pro;
 }
-function load_one_pro($id)
+function load_one_pro($id) // Chi tiết sản phẩm
 {
     $sql = " SELECT * FROM PRODUCT 
     JOIN COLOR_PRO ON PRODUCT.ID_PRO = COLOR_PRO.ID_PRO
@@ -106,7 +106,7 @@ function load_one_pro($id)
     $pro = pdo_query_one($sql);
     return $pro;
 }
-function count_pro_filter($kyw, $brand, $cate)
+function count_pro_filter($kyw, $brand, $cate)  // Đếm số lượng sản phẩm dựa trên từ khóa,...
 {
     $sql = "SELECT * FROM PRODUCT
     WHERE PRODUCT.ID_PRO != 1";
@@ -126,7 +126,7 @@ function count_pro_filter($kyw, $brand, $cate)
     }
     return $i;
 }
-function load_limit_pro_filter($start, $limit, $kyw, $brand, $cate, $load_with, $load_type)
+function load_limit_pro_filter($start, $limit, $kyw, $brand, $cate, $load_with, $load_type)  // tải sản phẩm với giới hạn trang và số lượng cùng bộ lọc
 {
     $sql = "SELECT * FROM PRODUCT 
     JOIN CATEGORY ON PRODUCT.ID_CATE = CATEGORY.ID_CATE 
@@ -145,7 +145,7 @@ function load_limit_pro_filter($start, $limit, $kyw, $brand, $cate, $load_with, 
     $pro = pdo_query($sql);
     return $pro;
 }
-function other_pro($id)
+function other_pro($id) // các sản phẩm khác trong chi tiết sản phẩm
 {
     $product = "SELECT * FROM PRODUCT WHERE ID_PRO = $id";
     $pro = pdo_query_one($product);
@@ -165,19 +165,19 @@ function other_pro($id)
     $other_pro = pdo_query($sql);
     return $other_pro;
 }
-function check_pro($pro_name)
+function check_pro($pro_name)  // tìm theo tên sản phẩm
 {
     $sql = "SELECT * FROM PRODUCT WHERE PRO_NAME = '$pro_name'";
     $pro = pdo_query_one($sql);
     return $pro;
 }
-function check_pro_update($pro_name,$id_pro)
+function check_pro_update($pro_name,$id_pro) // tìm và update
 {
     $sql = "SELECT * FROM PRODUCT WHERE PRO_NAME = '$pro_name' AND id_pro != $id_pro";
     $pro = pdo_query_one($sql);
     return $pro;
 }
-function change_view ($id_pro){
+function change_view ($id_pro){ // tăng số lượng người xem
     $sql = "UPDATE PRODUCT SET VIEW = VIEW + 1 WHERE ID_PRO = $id_pro";
     pdo_execute($sql);
 }
@@ -185,7 +185,7 @@ function change_view ($id_pro){
 
 <!-- color_pro -->
  <?php
-function add_more_color($id_pro, $id_color, $img, $quantity)
+function add_more_color($id_pro, $id_color, $img, $quantity) 
 {
     $sql = "INSERT INTO COLOR_PRO (ID_PRO,ID_COLOR,IMAGE,QUANTITY) VALUES ('$id_pro','$id_color','$img','$quantity')";
     pdo_execute($sql);
@@ -206,7 +206,7 @@ function update_color_pro($id_clp, $id_color, $img, $quantity)
     }
     pdo_execute($sql);
 }
-function load_limit_10_color_pro($start, $limit, $id_pro)
+function load_limit_10_color_pro($start, $limit, $id_pro) //Tải màu sắc của sản phẩm với giới hạn trang và số lượng.
 {
     $sql = "SELECT * FROM COLOR_PRO 
     JOIN COLOR ON COLOR_PRO.ID_COLOR = COLOR.ID_COLOR
@@ -215,7 +215,7 @@ function load_limit_10_color_pro($start, $limit, $id_pro)
     $pro = pdo_query($sql);
     return $pro;
 }
-function load_color_for_pro($id_pro)
+function load_color_for_pro($id_pro) // tất cả màu sắc của 1 sản phẩm
 {
     $sql = "SELECT * FROM COLOR_PRO 
     JOIN COLOR ON COLOR_PRO.ID_COLOR = COLOR.ID_COLOR
@@ -223,7 +223,7 @@ function load_color_for_pro($id_pro)
     $list_color = pdo_query($sql);
     return $list_color;
 }
-function load_pro_for_color($id_pro, $color)
+function load_pro_for_color($id_pro, $color) // 1 màu sắc cụ thể của sản phẩm
 {
     $sql = "SELECT * FROM COLOR_PRO 
     JOIN COLOR ON COLOR_PRO.ID_COLOR = COLOR.ID_COLOR
@@ -231,7 +231,7 @@ function load_pro_for_color($id_pro, $color)
     $color_pro = pdo_query_one($sql);
     return $color_pro;
 }
-function change_quantity_pro($id_clp,$quantity){
+function change_quantity_pro($id_clp,$quantity){ // thay đổi số lượng màu sắc của sản phẩm
     $change = "UPDATE COLOR_PRO SET QUANTITY = QUANTITY - $quantity WHERE ID_CLP = $id_clp";
     pdo_execute($change); 
 }

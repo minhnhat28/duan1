@@ -96,23 +96,14 @@
     <?php
     foreach ($product_sale as $key => $value) {
       $price_sale = number_format($value['price'], 0, '.', '.');
-      $discount_sale = number_format($value['discount'], 0, '.', '.');
-      $sale_sale = 100 - ($value['discount'] / ($value['price'] / 100));
+
       ?>
       <div class="col-6 col-md-4 col-lg-3 col-xl-2 mt-4">
         <div class="card border-0" style="width: 100%;">
           <div class="collection-img position-relative">
             <a href="index.php?act=product_details&id=<?= $value['id_pro'] ?>"><img
                 src="./Duan/image_product/<?= $value['img'] ?>" class="card-img-top" alt="..."></a>
-            <?php
-            if ($value['discount'] > 0) {
-              ?>
-              <span class="position-absolute bg-primary text-white d-flex align-items-center justify-content-center">-
-                <?= ceil($sale_sale) ?>%
-              </span>
-              <?php
-            }
-            ?>
+            
           </div>
           <div class="card-body">
             <div class="product-title">
