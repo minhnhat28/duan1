@@ -167,8 +167,66 @@ if ((isset($_GET['act'])) && ($_GET['act'] != '')) {
                 include "./Duan/View/HTML_PHP/Product/product_details.php";
                 break;
 
-        ///////////////////////////////////////
-
+        case 'cart':
+            if (isset($_SESSION['user_name_login'])) {
+                if (isset($_POST['id_clp'])) {
+                    if (isset($_POST['buy']) && $_POST['buy']) {
+                        $id_pro = $_POST['id_pro'];
+                        $id_clp = $_POST['id_clp'];
+                        $product = load_one_pro_buy($id_clp);
+                        $date = date("Y-m-d");
+                        $method = "check_out_buy";
+                        $quantity_cart = $_POST['quantity'];
+                        if (isset($_POST['add']) && $_POST['add']) {
+                            $add_code = $_POST['add_code'];
+                        } 
+                            
+                        
+                        include "./Duan/View/HTML_PHP/Cart/check_out.php";
+                    }
+                    if (isset($_POST['add_to_cart']) && $_POST['add_to_cart']) {
+                        $id_clp = $_POST['id_clp'];
+                        $id_pro = $_POST['id_pro'];
+                        $quantity_add = $_POST['quantity'];
+                        $cart = check_cart($_SESSION['user_name_login']['id_user']);
+                        extract($cart);
+                        $check_other_cart = check_other_cart($id_cart, $id_clp);
+                        if (!is_array($check_other_cart)) {
+                            add_to_cart($id_cart, $id_clp, $quantity_add);
+                            echo '<script>alert("Thêm vào giỏ hàng thành công");</script>';
+                        } else {
+                            extract($check_other_cart);
+                            if (($quantity_add + $quantity_cart) > $quantity) {
+                                echo '<script>alert("Số lượng trong giỏ hàng quá lớn");</script>';
+                            } else {
+                                add_quantity_other_cart($id_cart, $id_clp, $quantity_add);
+                                echo '<script>alert("Thêm vào giỏ hàng thành công");</script>';
+                            }
+                        }
+                        echo "<script>window.location.href='index.php?act=product_details&id=$id_pro';</script>";
+                    }
+                } else {
+                    $id_pro = $_POST['id_pro'];
+                    echo '<script>alert("Vui lòng chọn màu !!");</script>';
+                    echo "<script>window.location.href='index.php?act=product_details&id=$id_pro';</script>";
+                }
+            } else {
+                $id_pro = $_POST['id_pro'];
+                echo '<script>alert("Bạn cần đăng nhập để thêm vào giỏ hàng !");</script>';
+                echo "<script>window.location.href='index.php?act=product_details&id=$id_pro';</script>";
+            }
+            break;
+        case 'delete_cart':
+            if (isset($_GET['id_cart'])) {
+                $id_cart = $_GET['id_cart'];
+                $id_clp = $_GET['id_clp'];
+                delete_one_other_cart($id_cart, $id_clp);
+            }
+            $carts = load_all_cart_for_account($_SESSION['user_name_login']['id_user']);
+            echo '<script>location.href="index.php?act=cart_lists"</script>';
+            break;
+        
+        
 
         //////////////////////////////////////
         default:
