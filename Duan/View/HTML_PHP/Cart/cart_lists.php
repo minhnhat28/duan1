@@ -77,6 +77,7 @@
                         foreach ($carts as $cart) {
                             extract($cart);
                             $price_format = number_format($price,0,'.','.');
+                            $total_price = $price * $quantity_cart;
                             $total_price_format =number_format($total_price,0,'.','.') ;
                             $totals +=$total_price;
                             $totals_format = number_format($totals,0,'.','.');
@@ -107,7 +108,7 @@
                                     <input type="number" name="quantity_cart" id="quantity_cart" min="1" max="<?=$quantity?>" value="<?=$quantity_cart?>">
                                     <input type="hidden" name="id_oc" id="id_oc" value="<?=$id_oc?>">
                             </td>
-                            <td class="text-right font-weight-semibold align-middle p-4"><?=$total_price_format?>đ</td>
+                            <td class="text-right font-weight-semibold align-middle p-4"><?=$total_price_format?>đ</td> 
                             <td class="text-center align-middle px-0"><a onclick="return confirm('bạn có muốn xóa không');" href="index.php?act=delete_cart&id_cart=<?=$id_cart?>&id_clp=<?=$id_clp?>"
                                     class="shop-tooltip close float-none text-danger text-decoration-none" title
                                     data-original-title="Remove" style="font-size: xx-large;">×</a></td>

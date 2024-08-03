@@ -225,7 +225,49 @@ if ((isset($_GET['act'])) && ($_GET['act'] != '')) {
             $carts = load_all_cart_for_account($_SESSION['user_name_login']['id_user']);
             echo '<script>location.href="index.php?act=cart_lists"</script>';
             break;
-        
+            case 'change_quantity':
+                if (isset($_GET['id_oc'])) {
+                    $quantity_cart = $_GET['amount'];
+                    $id_oc = $_GET['id_oc'];
+                    change_quantity($id_oc, $quantity_cart);
+                }
+                echo "<script>window.location.href='index.php?act=cart_lists';</script>";
+                break;
+            case 'cart_lists':
+                $date = date("Y-m-d");
+                $carts = load_all_cart_for_account($_SESSION['user_name_login']['id_user']);
+                include "./Duan/View/HTML_PHP/Cart/cart_lists.php";
+                break;
+        case 'check_out':
+            $carts = load_all_cart_for_account($_SESSION['user_name_login']['id_user']);
+            $i = 0;
+            foreach ($carts as $cart) {
+                $color_pro = load_one_color_pro($cart['id_clp']);
+                if ($cart['quantity_cart'] > $color_pro['quantity'] || $cart['id_pro'] == 1) {
+                    $i++;
+                }
+            }
+            if ($i == 0) {
+                $date = date("Y-m-d");
+                $method = "check_out_cart";
+                $payments = load_all_payment();
+                if (isset($_POST['add']) && $_POST['add']) {
+                    $add_code = $_POST['add_code'];
+                }
+                include "./Duan/View/HTML_PHP/Cart/check_out.php";
+            } else {
+                echo '<script>alert("sản phẩm hoặc số lượng trong giỏ hàng không phù hợp");</script>';
+                echo "<script>location.href='index.php?act=cart_lists';</script>";
+            }
+            break;
+        case 'check_out_buy':
+            $date = date("Y-m-d");
+            $payments = load_all_payment();
+            if (isset($_POST['add']) && $_POST['add']) {
+                $add_code = $_POST['add_code'];
+            }
+            include "./Duan/View/HTML_PHP/Cart/check_out.php";
+            break;
         
 
         //////////////////////////////////////

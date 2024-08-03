@@ -47,11 +47,6 @@
             }
             else{
         ?>
-            <a href="index.php?act=shipping_process"><button type="button" class="btn position-relative">
-                <i class="fa-solid fa-truck-fast"></i>
-                <span class="position-absolute top-0 start-100 translate-middle badge bg-primary">0</span>
-              </button>
-            </a>
             <a href="index.php?act=cart_lists">
               <button type="button" class="btn position-relative">
                 <i class="fa fa-shopping-cart"></i>
