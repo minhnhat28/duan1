@@ -10,7 +10,10 @@ include "./Duan/PDO/comment.php";
 include "./Duan/PDO/account.php";
 include "./Duan/PDO/bill.php";
 include "./Duan/PDO/cart.php";
-
+if (isset($_SESSION['user_name_login'])) {
+    $_SESSION['count_cart'] = count_cart($_SESSION['user_name_login']['id_user']);
+    $_SESSION['count_order'] = $count = count_bill_per_user($_SESSION['user_name_login']['id_user'], 1, 2);
+}
 if ((isset($_GET['act'])) && ($_GET['act'] != '')) {
     $act = $_GET['act'];
     switch ($act) {
@@ -263,7 +266,205 @@ if ((isset($_GET['act'])) && ($_GET['act'] != '')) {
                 $payments = load_all_payment();
                 include "./Duan/View/HTML_PHP/Cart/check_out.php";
                 break;
-        
+        case 'shipping_process':
+            $id_user = $_SESSION['user_name_login']['id_user'];
+            $count = count_bill_per_user($id_user, 1, 2);
+            $bills = load_all_bill_per_user($id_user, 1, 2);
+            include "./Duan/View/HTML_PHP/Cart/shipping_process.php";
+            break;
+        case 'confirm_checkout':
+            if (isset($_POST['pay']) && $_POST['pay']) {
+                $firstname = $_POST['firstname'];
+                $lastname = $_POST['lastname'];
+                $_SESSION['firstname'] = $firstname;
+                $_SESSION['lastname'] = $lastname;
+                $tel = $_POST['tel'];
+                $email = $_POST['email'];
+                $address = $_POST['address'];
+                $payment = 1;
+                $check_out_method = $_POST['check_out_method'];
+                $totals = $_POST['totals'];
+                $date = date("Y-m-d");
+                $id_user = $_SESSION['user_name_login']['id_user'];
+                $bills = load_all_cart_for_account($id_user);
+                if ($firstname == "" || $lastname == "" || $tel == "" || $email == "" || $address == "") {
+                    echo "<script>alert('không được bỏ trống');</script>";
+                    if ($check_out_method == "check_out_buy") {
+                        echo "<script>location.href='index.php';</script>";
+                    } elseif ($check_out_method == "check_out_cart") {
+                        echo "<script>location.href='index.php?act=check_out';</script>";
+                    }
+                } elseif (preg_match('/[!@#$%^&*(),.?":{}|<>]/', $firstname) || preg_match('/[!@#$%^&*(),.?":{}|<>]/', $lastname)) {
+                    echo "<script>alert('Không được thêm ký tự đặc biệt');</script>";
+                    if ($check_out_method == "check_out_buy") {
+                        echo "<script>location.href='index.php';</script>";
+                    } elseif ($check_out_method == "check_out_cart") {
+                        echo "<script>location.href='index.php?act=check_out';</script>";
+                    }
+                } elseif (!ctype_digit($tel)) {
+                    echo "<script>alert('số điện thoại không hợp lệ');</script>";
+                    if ($check_out_method == "check_out_buy") {
+                        echo "<script>location.href='index.php';</script>";
+                    } elseif ($check_out_method == "check_out_cart") {
+                        echo "<script>location.href='index.php?act=check_out';</script>";
+                    }
+                } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    echo "<script>alert('email không hợp lệ');</script>";
+                    if ($check_out_method == "check_out_buy") {
+                        echo "<script>location.href='index.php';</script>";
+                    } elseif ($check_out_method == "check_out_cart") {
+                        echo "<script>location.href='index.php?act=check_out';</script>";
+                    }
+                } else {
+                    add_bill($firstname, $lastname, $tel, $address, $date, $payment, $id_user, $totals);
+                    if ($check_out_method == 'check_out_cart') {
+                        foreach ($bills as $add) {
+                            extract($add);
+                            add_other_bill($id_clp, $pro_name, $color_name, $brand_name, $price, $quantity_cart);
+                            change_quantity_pro($id_clp, $quantity_cart);
+                        }
+                        delete_all_other_cart($id_cart);
+                    } elseif ($check_out_method == 'check_out_buy') {
+                        $id_clp = $_POST['id_clp'];
+                        $pro_name = $_POST['pro_name'];
+                        $color_name = $_POST['color_name'];
+                        $brand_name = $_POST['brand_name'];
+                        $price = $_POST['price'];
+                        $quantity_cart = $_POST['quantity_cart'];
+                        add_other_bill($id_clp, $pro_name, $color_name, $brand_name, $price, $quantity_cart);
+                        change_quantity_pro($id_clp, $quantity_cart);
+                    }
+                    echo "<script>alert('Thanh Toán Thành Công');</script>";
+                    echo "<script>location.href='index.php';</script>";
+                }
+            }
+            // Thanh toan vn pay
+            if (isset($_POST['redirect']) && $_POST['redirect']) {
+                // error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
+                // date_default_timezone_set('Asia/Ho_Chi_Minh');
+                $firstname = $_POST['firstname'];
+                $lastname = $_POST['lastname'];
+                $_SESSION['firstname'] = $firstname;
+                $_SESSION['lastname'] = $lastname;
+                $tel = $_POST['tel'];
+                $email = $_POST['email'];
+                $address = $_POST['address'];
+                $check_out_method = $_POST['check_out_method'];
+                $totals = $_POST['totals'];
+                $date = date("Y-m-d");
+                $id_user = $_SESSION['user_name_login']['id_user'];
+                $bills = load_all_cart_for_account($id_user);
+                $id_clp = $_POST['id_clp'];
+                $pro_name = $_POST['pro_name'];
+                $color_name = $_POST['color_name'];
+                $brand_name = $_POST['brand_name'];
+                $price = $_POST['price'];
+                $quantity_cart = $_POST['quantity_cart'];
+                $bill_array = [
+                    $firstname,
+                    $lastname,
+                    $tel,
+                    $email,
+                    $address,
+                    $check_out_method,
+                    $totals,
+                    $date,
+                    $id_clp,
+                    $pro_name,
+                    $color_name,
+                    $brand_name,
+                    $price,
+                    $quantity_cart
+                ];
+                $_SESSION['bill_array'] = $bill_array;
+                if ($firstname == "" || $lastname == "" || $tel == "" || $email == "" || $address == "") {
+                    echo "<script>alert('không được bỏ trống');</script>";
+                    if ($check_out_method == "check_out_buy") {
+                        echo "<script>location.href='index.php';</script>";
+                    } elseif ($check_out_method == "check_out_cart") {
+                        echo "<script>location.href='index.php?act=check_out';</script>";
+                    }
+                } elseif (preg_match('/[!@#$%^&*(),.?":{}|<>]/', $firstname) || preg_match('/[!@#$%^&*(),.?":{}|<>]/', $lastname)) {
+                    echo "<script>alert('Không được thêm ký tự đặc biệt');</script>";
+                    if ($check_out_method == "check_out_buy") {
+                        echo "<script>location.href='index.php';</script>";
+                    } elseif ($check_out_method == "check_out_cart") {
+                        echo "<script>location.href='index.php?act=check_out';</script>";
+                    }
+                } elseif (!ctype_digit($tel)) {
+                    echo "<script>alert('số điện thoại không hợp lệ');</script>";
+                    if ($check_out_method == "check_out_buy") {
+                        echo "<script>location.href='index.php';</script>";
+                    } elseif ($check_out_method == "check_out_cart") {
+                        echo "<script>location.href='index.php?act=check_out';</script>";
+                    }
+                } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    echo "<script>alert('email không hợp lệ');</script>";
+                    if ($check_out_method == "check_out_buy") {
+                        echo "<script>location.href='index.php';</script>";
+                    } elseif ($check_out_method == "check_out_cart") {
+                        echo "<script>location.href='index.php?act=check_out';</script>";
+                    }
+                } else {
+                    $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
+                    $vnp_Returnurl = "http://localhost/d-n-1/index.php?act=handle_vnpay";
+                    $vnp_TmnCode = "GHVBHPHU"; //Mã website tại VNPAY 
+                    $vnp_HashSecret = "AWZSLDYHZDWWJIRWXWKLXWKVIGALXVAP"; //Chuỗi bí mật
+                    $vnp_TxnRef = rand(00, 99999); //Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này sang VNPAY
+                    $vnp_OrderInfo = 'Nhap Noi Dung Thanh Toan';
+                    $vnp_OrderType = 'billpayment';
+                    $vnp_Amount = $totals * 100;
+                    $vnp_Locale = 'vn';
+                    $vnp_BankCode = '';
+                    $vnp_IpAddr = $_SERVER['REMOTE_ADDR'];
+                    $inputData = array(
+                        "vnp_Version" => "2.1.0",
+                        "vnp_TmnCode" => $vnp_TmnCode,
+                        "vnp_Amount" => $vnp_Amount,
+                        "vnp_Command" => "pay",
+                        "vnp_CreateDate" => date('YmdHis'),
+                        "vnp_CurrCode" => "VND",
+                        "vnp_IpAddr" => $vnp_IpAddr,
+                        "vnp_Locale" => $vnp_Locale,
+                        "vnp_OrderInfo" => $vnp_OrderInfo,
+                        "vnp_OrderType" => $vnp_OrderType,
+                        "vnp_ReturnUrl" => $vnp_Returnurl,
+                        "vnp_TxnRef" => $vnp_TxnRef
+                    );
+                    if (isset($vnp_BankCode) && $vnp_BankCode != "") {
+                        $inputData['vnp_BankCode'] = $vnp_BankCode;
+                    }
+                    ksort($inputData);
+                    $query = "";
+                    $i = 0;
+                    $hashdata = "";
+                    foreach ($inputData as $key => $value) {
+                        if ($i == 1) {
+                            $hashdata .= '&' . urlencode($key) . "=" . urlencode($value);
+                        } else {
+                            $hashdata .= urlencode($key) . "=" . urlencode($value);
+                            $i = 1;
+                        }
+                        $query .= urlencode($key) . "=" . urlencode($value) . '&';
+                    }
+
+                    $vnp_Url = $vnp_Url . "?" . $query;
+                    if (isset($vnp_HashSecret)) {
+                        $vnpSecureHash = hash_hmac('sha512', $hashdata, $vnp_HashSecret); //  
+                        $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
+                    }
+                    $returnData = array(
+                        'code' => '00', 'message' => 'success', 'data' => $vnp_Url
+                    );
+                    if (isset($_POST['redirect'])) {
+                        header('Location: ' . $vnp_Url);
+                        die();
+                    } else {
+                        echo json_encode($returnData);
+                    }
+                }
+            }
+            break;
 
         //////////////////////////////////////
         default:

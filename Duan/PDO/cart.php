@@ -48,7 +48,10 @@ function add_quantity_other_cart($id_cart,$id_clp,$quantity){
     $sql = "UPDATE OTHER_CART SET QUANTITY_CART = QUANTITY_CART + $quantity WHERE ID_CART = $id_cart AND ID_CLP = $id_clp";
     pdo_execute($sql);
 }
-
+function delete_all_other_cart($id_cart){
+    $sql = "DELETE FROM OTHER_CART WHERE ID_CART = $id_cart";
+    pdo_execute($sql);
+}
 function delete_one_other_cart($id_cart,$id_clp){
     $sql = "DELETE FROM OTHER_CART WHERE ID_CART = $id_cart AND ID_CLP = $id_clp";
     pdo_execute($sql);
