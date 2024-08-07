@@ -35,14 +35,12 @@ function delete_account($id_user)                                               
 {   
     $update_bill = "UPDATE bill SET ID_USER = 1 WHERE ID_USER = $id_user";
     pdo_execute($update_bill);
-    $delete_comment = "DELETE FROM COMMNENT WHERE ID_USER = $id_user";
-    pdo_execute($delete_comment);
     $delete_cart = "DELETE FROM CART WHERE ID_USER = $id_user";
     pdo_execute($delete_cart);
     $sql = "DELETE FROM user WHERE id_user=" . $id_user;
     pdo_execute($sql);
 }
-function count_account(){
+function count_account(){    // đếm số lượng người dùng
     $sql = "SELECT * FROM USER";
     $color = pdo_query($sql);
     $i=0;
@@ -52,23 +50,23 @@ function count_account(){
     $number =ceil($i / 5);
     return $number;
 }
-function load_limit_5_account ($start,$limit){
+function load_limit_5_account ($start,$limit){   // lấy danh sách người dùng theo giảm dần 
     $sql = "SELECT * FROM USER 
     ORDER BY ROLE DESC LIMIT $start,$limit "; 
     $color = pdo_query($sql);
     return $color;
 }
-function load_one_account($id_user){
+function load_one_account($id_user){ // lấy thông tin người dùng 
     $sql = "SELECT * FROM USER WHERE ID_USER = $id_user";
     $acc = pdo_query_one($sql);
     return $acc;
 }
-function check_exists_user_name($user_name){
+function check_exists_user_name($user_name){    // kiểm tra người dùng có tồn tại hay không
     $sql = "SELECT * FROM USER WHERE USER_NAME = '$user_name'";
     $acc = pdo_query_one($sql);
     return $acc;
 }
-function check_exists_email($email){
+function check_exists_email($email){  //check email tồn tại hay không
     $sql = "SELECT * FROM USER WHERE EMAIL = '$email'";
     $acc = pdo_query_one($sql);
     return $acc;

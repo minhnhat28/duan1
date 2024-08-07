@@ -177,6 +177,7 @@ if ((isset($_GET['act'])) && ($_GET['act'] != '')) {
                         $date = date("Y-m-d");
                         $method = "check_out_buy";
                         $quantity_cart = $_POST['quantity'];
+                        $payments = load_all_payment();
                         if (isset($_POST['add']) && $_POST['add']) {
                             $add_code = $_POST['add_code'];
                         } 
@@ -225,7 +226,7 @@ if ((isset($_GET['act'])) && ($_GET['act'] != '')) {
             $carts = load_all_cart_for_account($_SESSION['user_name_login']['id_user']);
             echo '<script>location.href="index.php?act=cart_lists"</script>';
             break;
-            case 'change_quantity':
+        case 'change_quantity':
                 if (isset($_GET['id_oc'])) {
                     $quantity_cart = $_GET['amount'];
                     $id_oc = $_GET['id_oc'];
@@ -233,7 +234,7 @@ if ((isset($_GET['act'])) && ($_GET['act'] != '')) {
                 }
                 echo "<script>window.location.href='index.php?act=cart_lists';</script>";
                 break;
-            case 'cart_lists':
+        case 'cart_lists':
                 $date = date("Y-m-d");
                 $carts = load_all_cart_for_account($_SESSION['user_name_login']['id_user']);
                 include "./Duan/View/HTML_PHP/Cart/cart_lists.php";
@@ -251,9 +252,6 @@ if ((isset($_GET['act'])) && ($_GET['act'] != '')) {
                 $date = date("Y-m-d");
                 $method = "check_out_cart";
                 $payments = load_all_payment();
-                if (isset($_POST['add']) && $_POST['add']) {
-                    $add_code = $_POST['add_code'];
-                }
                 include "./Duan/View/HTML_PHP/Cart/check_out.php";
             } else {
                 echo '<script>alert("sản phẩm hoặc số lượng trong giỏ hàng không phù hợp");</script>';
@@ -261,13 +259,10 @@ if ((isset($_GET['act'])) && ($_GET['act'] != '')) {
             }
             break;
         case 'check_out_buy':
-            $date = date("Y-m-d");
-            $payments = load_all_payment();
-            if (isset($_POST['add']) && $_POST['add']) {
-                $add_code = $_POST['add_code'];
-            }
-            include "./Duan/View/HTML_PHP/Cart/check_out.php";
-            break;
+                $date = date("Y-m-d");
+                $payments = load_all_payment();
+                include "./Duan/View/HTML_PHP/Cart/check_out.php";
+                break;
         
 
         //////////////////////////////////////

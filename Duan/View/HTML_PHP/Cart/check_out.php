@@ -17,10 +17,10 @@
                         if ($method == "check_out_cart") {
                             foreach ($carts as $cart) {
                                 extract($cart);
+                                $totals = $price *$quantity_cart;
                                 $totals_all += $totals;
                                 $total_format = number_format($totals, 0, '.', '.');
                                 $totals_all_format = number_format($totals_all, 0, '.', '.');
-
                         ?>
                                 <li class="list-group-item d-flex justify-content-between lh-condensed">
                                     <div>
@@ -56,21 +56,9 @@
                         }
                         ?>
                         <li class="list-group-item d-flex justify-content-between">
-                            <span>Tổng Tiền</span>
+                            <span>Tổng Tiền:</span>
                             <strong><?= $totals_all_format ?>đ</strong>
-                        </li>
-
-                        <li class="list-group-item d-flex justify-content-between bg-light">
-                            <div class="text-success">
-
-                                <span class="text-success"><?= $code ?></span>
-                            </div>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between">
-                            <span>=</span>
-                        </li>
-                        <?php
-                        ?>
+                        </li>    
                     </ul>
                     <form class="card p-2" action="index.php?act=check_out" method="POST">
 
@@ -123,16 +111,10 @@
                         <hr>
                         <h4 class="mb-3">Phương Thức Thanh Toán</h4>
                         <hr>
-                        <?php
-                        if ($voucher_discount > 0) {
-                        ?>
-                            <input type="hidden" name="totals" id="" value="<?= $totals_sale ?>">
-                        <?php
-                        } else {
-                        ?>
+                        
                             <input type="hidden" name="totals" id="" value="<?= $totals_all ?>">
                         <?php
-                        }
+                        
                         ?>
                         <input type="hidden" name="check_out_method" id="" value="<?= $method ?>">
                         <input type="hidden" name="id_clp" id="" value="<?= $id_clp ?>">
