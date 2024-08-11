@@ -208,20 +208,12 @@
                 </ul>
               </li>
               <li>
-                <a class="has-arrow" href="javascript:void()" aria-expanded="false"><i class="fa-solid fa-ticket"></i><span
-                    class="nav-text">Voucher</span></a>
-                <ul aria-expanded="false">
-                  <li><a href="#">Danh Sách Voucher</a></li>
-                  <li><a href="#">Thêm Voucher</a></li>
-                </ul>
-              </li>
-              <li>
                 <a class="has-arrow" href="javascript:void()" aria-expanded="false"><i
                     class="fa-solid fa-truck-fast"></i><span class="nav-text">Đơn Hàng</span></a>
                 <ul aria-expanded="false">
-                  <li><a href="#">Danh Sách Đơn Hàng</a></li>
-                  <li><a href="#">Đơn Hàng Đã Giao</a></li>
-                  <li><a href="#">Đơn Hàng Đã Bị Hủy</a></li>
+                  <li><a href="index.php?act=list_order">Danh Sách Đơn Hàng</a></li>
+                  <li><a href="index.php?act=list_completed_order">Đơn Hàng Đã Giao</a></li>
+                  <li><a href="index.php?act=list_cancelled_order">Đơn Hàng Đã Bị Hủy</a></li>
                 </ul>
               </li>
 

@@ -393,16 +393,130 @@ if (empty($_SESSION['user_name_login'])) {
                 $list_pro = load_limit_pro($start, $limit, "", 0);
                 include "product/list.php";
                 break;
-                //////////////////////////
-
-
-
-
+                case 'list_account':
+                    $limit = 5;
+                    if (isset($_POST['number'])) {
+                        $number = $_POST['number'];
+                        $start = ($number - 1) * $limit;
+                    } else {
+                        $start = 0;
+                    }
+                    $count = count_account();
+                    $list_account = load_limit_5_account($start, $limit);
+                    include "account/list.php";
+                    break;
+                case 'update_account':
+                    if (isset($_GET['id'])) {
+                        $id_user = $_GET['id'];
+                    }
+                    $account = load_one_account($id_user);
+                    include "account/update.php";
+                    break;
+            case 'updated_account':
+                if (isset($_POST['sua'])) {
+                    if ($_POST['user_name'] == "" || $_POST['pass'] == "") {
+                        echo "<script>alert('Không để trống');</script>";
+                    } elseif (preg_match('/[!@#$%^&*(),.?":{}|<>]/', $_POST['user_name']) || preg_match('/[!@#$%^&*(),.?":{}|<>]/', $_POST['pass'])) {
+                        echo "<script>alert('Không được thêm ký tự đặc biệt');</script>";
+                    } else {
+                        $id_user = $_POST['id_user'];
+                        $user_name = $_POST['user_name'];
+                        $pass = $_POST['pass'];
+                        $email = $_POST['email'];
+                        $address = $_POST['address'];
+                        $tel = $_POST['tel'];
+                        $avatar = $_FILES['avatar']['name'];
+                        $file_type = $_FILES['avatar']['file_type'];
+                        if ($avatar) {
+                            $tmp_name = $_FILES['avatar']['tmp_name'];
+                            move_uploaded_file($tmp_name, '../image_user/' . $avatar);
+                            update_account($id_user, $user_name, $pass, $email, $address, $tel, $avatar);
+                        } else {
+                            update_account($id_user, $user_name, $pass, $email, $address, $tel, "");
+                        }
+                    }
+                }
+                $limit = 5;
+                if (isset($_POST['number'])) {
+                    $number = $_POST['number'];
+                    $start = ($number - 1) * $limit;
+                } else {
+                    $start = 0;
+                }
+                $count = count_account();
+                $list_account = load_limit_5_account($start, $limit);
+                include "account/list.php";
+                break;
+            case 'list_order':
+                $limit = 3;
+                if (isset($_GET['page-ucb'])) {
+                    $number = $_GET['page-ucb'];
+                    $start_ucb = $number * $limit;
+                } else {
+                    $start_ucb = 0;
+                }
+                $unconfimred_bills = load_all_bill(1, $start_ucb, $limit);
+                $unconfimred_bills_count = count_bill(1, $limit);
+                if (isset($_GET['page-cb'])) {
+                    $number = $_GET['page-cb'];
+                    $start_cb = $number * $limit;
+                } else {
+                    $start_cb = 0;
+                }
+                $confimred_bills = load_all_bill(2, $start_cb, $limit);
+                $confimred_bills_count = count_bill(2, $limit);
+                include "order/list.php";
+                break;
+            case 'list_completed_order':
+                $limit = 10;
+                if (isset($_GET['page'])) {
+                    $number = $_GET['page'];
+                    $start = $number * $limit;
+                } else {
+                    $start = 0;
+                }
+                $bills = load_all_bill(3, $start, $limit);
+                $bills_count = count_bill(3, $limit);
+                include "order/list_completed.php";
+                break;
+            case 'list_cancelled_order':
+                $limit = 10;
+                if (isset($_GET['page'])) {
+                    $number = $_GET['page'];
+                    $start = $number * $limit;
+                } else {
+                    $start = 0;
+                }
+                $bills = load_all_bill(0, $start, $limit);
+                $bills_count = count_bill(0, $limit);
+                include "order/list_cancelled.php";
+                break;
+            case 'change_status_bill':
+                if (isset($_GET['id'])) {
+                    $id_bill = $_GET['id'];
+                    change_status_bill($id_bill);
+                    echo "<script>location.href='index.php?act=list_order';</script>";
+                }
+                break;
             default:
+                $date = date("Y-m-d");
+                $total_bill = load_bill("");
+                $completed_bill = load_bill("3");
+                $canceled_bill  = load_bill("0");
+                $total_revenue = total_revenue();
+                $total = number_format($total_revenue['revenue'], 0, ".", ".");
+                $bills = load_new_bill($date);
                 include "view/home.php";
                 break;
         }
     } else {
+        $date = date("Y-m-d");
+        $total_bill = load_bill("");
+        $completed_bill = load_bill("3");
+        $canceled_bill  = load_bill("0");
+        $total_revenue = total_revenue();
+        $total = number_format($total_revenue['revenue'], 0, ".", ".");
+        $bills = load_new_bill($date);
         include "view/home.php";
     }
     include "view/footer.php";

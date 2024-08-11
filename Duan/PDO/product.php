@@ -77,15 +77,15 @@ function load_limit_pro($start, $limit, $kyw, $id_cate)  // Tải sản phẩm v
     return $pro;
 }
 
-// function load_top_5_pro()
-// {
-//     $sql = "SELECT * FROM PRODUCT 
-//     JOIN CATEGORY ON PRODUCT.ID_CATE = CATEGORY.ID_CATE
-//     WHERE PRODUCT.ID_PRO != 1
-//     ORDER BY VIEW DESC LIMIT 0,5";
-//     $pro = pdo_query($sql);
-//     return $pro;
-// }
+function load_top_5_pro()
+{
+    $sql = "SELECT * FROM PRODUCT 
+    JOIN CATEGORY ON PRODUCT.ID_CATE = CATEGORY.ID_CATE
+    WHERE PRODUCT.ID_PRO != 1
+    ORDER BY VIEW DESC LIMIT 0,5";
+    $pro = pdo_query($sql);
+    return $pro;
+}
 function load_one_pro_buy($id) // thông tin sản phẩm để mua
 {
     $sql = " SELECT * FROM color_pro 
@@ -235,5 +235,13 @@ function change_quantity_pro($id_clp,$quantity){ // thay đổi số lượng m�
     $change = "UPDATE COLOR_PRO SET QUANTITY = QUANTITY - $quantity WHERE ID_CLP = $id_clp";
     pdo_execute($change); 
 }
-
+function change_quantity_pro_cancel ($id_bill){
+    $sql = "SELECT * FROM OTHER_BILL WHERE ID_BILL = $id_bill";
+    $other_bills = pdo_query($sql);
+    foreach ($other_bills as $other_bill) {
+        extract($other_bill);
+        $change = "UPDATE COLOR_PRO SET QUANTITY = QUANTITY + $quantity_pro WHERE ID_CLP = $id_clp";
+        pdo_execute($change);
+    }
+}
 ?>

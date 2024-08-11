@@ -37,6 +37,7 @@
                             }
                         } elseif ($method == "check_out_buy") {
                             extract($product);
+                            $totals = $price *$quantity_cart;
                             $totals_all += $totals;
                             $total_format = number_format($totals, 0, '.', '.');
                             $totals_all_format = number_format($totals_all, 0, '.', '.');

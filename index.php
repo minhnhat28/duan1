@@ -119,7 +119,7 @@ if ((isset($_GET['act'])) && ($_GET['act'] != '')) {
                 }
             } else {
                 $brand = "";
-                $cate = "";
+                $cate = ""; 
             }
             if (isset($_GET['load_type'])) {
                 if ($_GET['load_type'] == 'price_up') {
@@ -184,8 +184,6 @@ if ((isset($_GET['act'])) && ($_GET['act'] != '')) {
                         if (isset($_POST['add']) && $_POST['add']) {
                             $add_code = $_POST['add_code'];
                         } 
-                            
-                        
                         include "./Duan/View/HTML_PHP/Cart/check_out.php";
                     }
                     if (isset($_POST['add_to_cart']) && $_POST['add_to_cart']) {
@@ -271,6 +269,26 @@ if ((isset($_GET['act'])) && ($_GET['act'] != '')) {
             $count = count_bill_per_user($id_user, 1, 2);
             $bills = load_all_bill_per_user($id_user, 1, 2);
             include "./Duan/View/HTML_PHP/Cart/shipping_process.php";
+            break;
+        case 'completed_order':
+            $id_user = $_SESSION['user_name_login']['id_user'];
+            $count = count_bill_per_user($id_user, 3, "");
+            $bills = load_all_bill_per_user($id_user, 3, "");
+            include "./Duan/View/HTML_PHP/Cart/completed_order.php";
+            break;
+        case 'cancel_order':
+            if (isset($_GET['id_bill'])) {
+                $id_bill = $_GET['id_bill'];
+                cancel_bill($id_bill);
+                change_quantity_pro_cancel($id_bill);
+            }
+            echo "<script>location.href='index.php?act=shipping_process';</script>";
+            break;
+        case 'cancelled_order':
+            $id_user = $_SESSION['user_name_login']['id_user'];
+            $count = count_bill_per_user($id_user, 0, "");
+            $bills = load_all_bill_per_user($id_user, 0, "");
+            include "./Duan/View/HTML_PHP/Cart/cancelled_order.php";
             break;
         case 'confirm_checkout':
             if (isset($_POST['pay']) && $_POST['pay']) {

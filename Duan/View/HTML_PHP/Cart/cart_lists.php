@@ -100,13 +100,9 @@
                             </td>
                                 <td class="text-right font-weight-semibold align-middle p-4" id="price"><?=$price_format?>đ</td>
                             
-                            
-                            <?php
-                                }
-                            ?>
                             <td class="align-middle p-4">
                                     <input type="number" name="quantity_cart" id="quantity_cart" min="1" max="<?=$quantity?>" value="<?=$quantity_cart?>">
-                                    <input type="hidden" name="id_oc" id="id_oc" value="<?=$id_oc?>">
+                                    <input type="hidden" name="id_oc" id="id_oc" value="<?=$id_oc?>">   
                             </td>
                             <td class="text-right font-weight-semibold align-middle p-4"><?=$total_price_format?>đ</td> 
                             <td class="text-center align-middle px-0"><a onclick="return confirm('bạn có muốn xóa không');" href="index.php?act=delete_cart&id_cart=<?=$id_cart?>&id_clp=<?=$id_clp?>"
@@ -114,7 +110,7 @@
                                     data-original-title="Remove" style="font-size: xx-large;">×</a></td>
                         </tr>
                     <?php
-                        
+                        }
                     ?>
                     </tbody>
                 </table>
