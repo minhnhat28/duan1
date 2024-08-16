@@ -503,9 +503,6 @@ if (empty($_SESSION['user_name_login'])) {
                 $total_bill = load_bill("");
                 $completed_bill = load_bill("3");
                 $canceled_bill  = load_bill("0");
-                $total_revenue = total_revenue();
-                $total = number_format($total_revenue['revenue'], 0, ".", ".");
-                $bills = load_new_bill($date);
                 include "view/home.php";
                 break;
         }
@@ -514,9 +511,6 @@ if (empty($_SESSION['user_name_login'])) {
         $total_bill = load_bill("");
         $completed_bill = load_bill("3");
         $canceled_bill  = load_bill("0");
-        $total_revenue = total_revenue();
-        $total = number_format($total_revenue['revenue'], 0, ".", ".");
-        $bills = load_new_bill($date);
         include "view/home.php";
     }
     include "view/footer.php";

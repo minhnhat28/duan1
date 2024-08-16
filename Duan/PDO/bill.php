@@ -25,7 +25,7 @@ function count_bill ($status,$bill_per_page){
     }
     return $number;
 }
-function load_bill($status){
+function load_bill($status){ //Lấy số lượng hóa đơn dựa trên trạng thái 
     $sql = "SELECT COUNT(*) AS count FROM bill WHERE 1";
     if($status != ""){
         $sql.=" AND STATUS = '$status'";
@@ -33,20 +33,11 @@ function load_bill($status){
     $bills = pdo_query_one($sql);
     return $bills;
 }
-function total_revenue(){
-    $sql = "SELECT SUM(total) AS revenue FROM bill WHERE STATUS = 3";
-    $bills = pdo_query_one($sql);
-    return $bills;
-}
-function load_new_bill ($date){
-    $sql = "SELECT * FROM bill JOIN STATUS ON bill.status = status.id_status WHERE DATE = '$date' ORDER BY id_bill DESC";
-    $bills = pdo_query($sql);
-    return $bills;
-}
-function load_all_bill($status,$start,$limit){
+
+function load_all_bill($status,$start,$limit){ //lấy danh sách hóa đơn theo thứ tự giảm dần theo trạng thái và phân trang
     $sql = "SELECT * FROM BILL 
     JOIN PAYMENT ON BILL.PAYMENT = PAYMENT.ID_PAYMENT 
-    JOIN STATUS ON BILL.STATUS = STATUS.ID_STATUS WHERE 1";
+    JOIN STATUS ON BILL.STATUS = STATUS.ID_STATUS WHERE 1"; 
     if($status != ""){
         $sql.= " AND STATUS = '$status'";
     }
@@ -54,7 +45,7 @@ function load_all_bill($status,$start,$limit){
     $bills = pdo_query($sql);
     return $bills;
 }
-function count_bill_per_user ($id_user,$status,$other_status){
+function count_bill_per_user ($id_user,$status,$other_status){  //Trạng thái đơn hàng
     $sql = "SELECT COUNT(*) AS count FROM BILL WHERE ID_USER = $id_user AND STATUS = '$status' ";
     if($other_status != ""){
         $sql .= " OR STATUS = '$other_status'";
@@ -63,7 +54,7 @@ function count_bill_per_user ($id_user,$status,$other_status){
     $number = $count['count'];
     return $number;
 }
-function load_all_bill_per_user($id_user,$status,$other_status){
+function load_all_bill_per_user($id_user,$status,$other_status){  //Trạng thái đơn hàng của người dùng trên admin
     $sql = "SELECT * FROM BILL 
     JOIN PAYMENT ON BILL.PAYMENT = PAYMENT.ID_PAYMENT 
     JOIN STATUS ON BILL.STATUS = STATUS.ID_STATUS 
@@ -76,12 +67,12 @@ function load_all_bill_per_user($id_user,$status,$other_status){
     $bills = pdo_query($sql);
     return $bills;
 }
-function load_other_bill($id_bill){
+function load_other_bill($id_bill){  //Hiển thị thông tin bill
     $sql = "SELECT * FROM OTHER_BILL WHERE ID_BILL = $id_bill";
     $other_bills = pdo_query($sql);
     return $other_bills;
 }
-function change_status_bill ($id_bill){
+function change_status_bill ($id_bill){ // thay đổi trang thái đơn hàng
     $check_bill = "SELECT * FROM BILL WHERE ID_BILL = $id_bill";
     $bill = pdo_query_one($check_bill);
     $bill_status = $bill['status'];

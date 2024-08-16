@@ -10,7 +10,8 @@ include "./Duan/PDO/comment.php";
 include "./Duan/PDO/account.php";
 include "./Duan/PDO/bill.php";
 include "./Duan/PDO/cart.php";
-if (isset($_SESSION['user_name_login'])) {
+
+if (isset($_SESSION['user_name_login'])) { //Kiểm tra người dùng đăng nhập hay không
     $_SESSION['count_cart'] = count_cart($_SESSION['user_name_login']['id_user']);
     $_SESSION['count_order'] = $count = count_bill_per_user($_SESSION['user_name_login']['id_user'], 1, 2);
 }
@@ -488,7 +489,7 @@ if ((isset($_GET['act'])) && ($_GET['act'] != '')) {
         default:
             echo '<script>alert("Lỗi!");</script>';
             $limit = 12;
-            $count_page_mouse = count_pro($limit, "chuột", 0);
+            $count_page_mouse = count_pro($limit, "chuột", 0); 
             $product_mouse = load_limit_pro($start, $limit, "chuột", 0);
             if (isset($_GET['page-key-board'])) {
                 $number = $_GET['page-key-board'];

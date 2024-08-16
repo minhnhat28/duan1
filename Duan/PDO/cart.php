@@ -12,7 +12,7 @@ function add_to_cart ($id_cart,$id_clp,$quantity){
     $sql = "INSERT INTO OTHER_CART(ID_CART,ID_CLP,QUANTITY_CART) VALUES ($id_cart,$id_clp,$quantity)";
     pdo_execute($sql);
 }
-function load_all_cart_for_account($id_user){ 
+function load_all_cart_for_account($id_user){  //Tải all các sản phẩm có trong giỏ hàng của người dùng
     $sql = "SELECT * FROM CART WHERE ID_USER = $id_user";
     $cart = pdo_query_one($sql);
     extract($cart);
@@ -25,7 +25,7 @@ function load_all_cart_for_account($id_user){
     $carts = pdo_query($other_cart);
     return $carts;
 }
-function count_cart($id_user){
+function count_cart($id_user){ 
     $sql = "SELECT * FROM CART WHERE ID_USER = $id_user";
     $carts = pdo_query_one($sql);
     extract($carts);
@@ -37,18 +37,18 @@ function count_cart($id_user){
     }
     return $count;
 }
-function check_other_cart($id_cart,$id_clp){
+function check_other_cart($id_cart,$id_clp){    //
     $sql = "SELECT * FROM OTHER_CART 
     JOIN COLOR_PRO ON OTHER_CART.ID_CLP = COLOR_PRO.ID_CLP
     WHERE OTHER_CART.ID_CLP = $id_clp AND ID_CART = $id_cart";
     $cart = pdo_query_one($sql);
     return $cart;
 }
-function add_quantity_other_cart($id_cart,$id_clp,$quantity){
+function add_quantity_other_cart($id_cart,$id_clp,$quantity){ //Thay đổi số lượng trong giỏ hàng
     $sql = "UPDATE OTHER_CART SET QUANTITY_CART = QUANTITY_CART + $quantity WHERE ID_CART = $id_cart AND ID_CLP = $id_clp";
     pdo_execute($sql);
 }
-function delete_all_other_cart($id_cart){
+function delete_all_other_cart($id_cart){ 
     $sql = "DELETE FROM OTHER_CART WHERE ID_CART = $id_cart";
     pdo_execute($sql);
 }
@@ -57,11 +57,11 @@ function delete_one_other_cart($id_cart,$id_clp){
     pdo_execute($sql);
 }
 
-function change_quantity($id_oc,$quantity_cart){
+function change_quantity($id_oc,$quantity_cart){ //Thay đổi số lượng trong giỏ hàng thanh toán
     $chang_quantity = "UPDATE OTHER_CART SET QUANTITY_CART = $quantity_cart WHERE ID_OC = $id_oc";
     $change = pdo_execute($chang_quantity);
 }
-function load_all_payment(){
+function load_all_payment(){ 
     $sql = "SELECT * FROM PAYMENT";
     $payment = pdo_query($sql);
     return $payment;
